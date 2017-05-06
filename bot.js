@@ -31,11 +31,10 @@ function dispatchText(message) {
     console.log("3");
 
     let parsed = parseCommand(message.content);
-
     if (!parsed) return;
 
-    let command = commands.commandList[parsed[0]];
-
+    let command = commands.dispatch[parsed[0]];
+    
     if (command) {
         command.do(message, parsed[1]);
     } else {
