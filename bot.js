@@ -3,11 +3,48 @@ const client = new Discord.Client();
 const token = process.env.DISCORD_TOKEN;
 client.login(token);
 const fs = require('fs')
+
 let allfeds = JSON.parse(fs.readFileSync('./federations.json', 'utf8'));
 let newUsers = new Discord.Collection();
+let prefix = "!";
+let commands = require("./commands.js");
 
 function commandIs(str, msg){
     return msg.content.toLowerCase().startsWith("!" + str);
+}
+
+function parseCommand(msg) {
+    if (msg.startsWith(prefix)) {
+        let args = msg.split(/\s/);
+        args[0] = args[0].substring(prefix.length);
+        return (args);
+    }
+
+    return "";
+}
+
+function dispatchText(message) {
+    console.log("1");
+    if (message.author.bot) return;
+    console.log(message.type);    
+    if (message.channel.type != "text") return;
+    console.log("3");
+
+    let parsed = parseCommand(message.content);
+
+    if (!parsed) return;
+
+    let command = commands.commandList[parsed[0]];
+
+    if (command) {
+        command.do(message, parsed[1]);
+    } else {
+        errorMessage(message, parsed[0]);
+    }
+}
+
+function errorMessage(message, attempt) {
+    message.channel.sendMessage(attempt + " isn't a recognized command!");
 }
 
 client.on('ready', () => {
@@ -24,7 +61,9 @@ client.on("guildMemberAdd", (member) => {
   });
 });
 
-client.on('message', message => {
+client.on('message', dispatchText);
+
+/*client.on('message', message => {
     var args = message.content.split(/[ ]+/);
     if(commandIs("whatid", message)){
         message.channel.sendMessage('Your personal ID is ' + message.author.id)
@@ -106,4 +145,4 @@ client.on('message', message => {
         message.channel.sendMessage("Here it the your user information " + usernme + myfed)
     }
 
-});
+});*/
