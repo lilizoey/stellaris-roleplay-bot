@@ -1,19 +1,15 @@
-const Discord = require('discord.js');
+import * as Discord from "discord.js";
+import * as fs from "fs";
+import * as Commands from "./commands";
+
 const client = new Discord.Client();
 const token = process.env.DISCORD_TOKEN;
-client.login(token);
-const fs = require('fs')
 
-let allfeds = JSON.parse(fs.readFileSync('./federations.json', 'utf8'));
-let newUsers = new Discord.Collection();
 let prefix = "!";
-let commands = require("./commands.js");
 
-function commandIs(str, msg){
-    return msg.content.toLowerCase().startsWith("!" + str);
-}
+client.login(token);
 
-function parseCommand(msg) {
+function parseCommand(msg:string) {
     if (msg.startsWith(prefix)) {
         let args = msg.split(/\s/);
         args[0] = args[0].substring(prefix.length);
@@ -23,7 +19,7 @@ function parseCommand(msg) {
     return "";
 }
 
-function dispatchText(message) {
+function dispatchText(message:Discord.Message) {
     console.log("1");
     if (message.author.bot) return;
     console.log(message.type);    
@@ -33,31 +29,21 @@ function dispatchText(message) {
     let parsed = parseCommand(message.content);
     if (!parsed) return;
 
-    let command = commands.dispatch[parsed[0]];
+    let command:Commands.textCommand = Commands.dispatch[parsed[0]];
     
-    if (command) {
-        command.do(message, parsed[1]);
+    if (command != null) {
+        command.run(message, parsed[1]);
     } else {
         errorMessage(message, parsed[0]);
     }
 }
 
-function errorMessage(message, attempt) {
+function errorMessage(message:Discord.Message, attempt:string) {
     message.channel.sendMessage(attempt + " isn't a recognized command!");
 }
 
 client.on('ready', () => {
     console.log('The bot is online!');
-});
-
-client.on("guildMemberAdd", (member) => {
-  if (!allfeds[member.user.id]) allfeds[member.user.id] = {
-    name: member.user.username,
-    federation: "none"
-  };
-  fs.writeFile('./federations.json', JSON.stringify(allfeds), (err) => {
-    if (err) console.error(err)
-  });
 });
 
 client.on('message', dispatchText);
