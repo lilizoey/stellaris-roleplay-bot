@@ -27,8 +27,7 @@ function dispatchText(message:Discord.Message) {
 
     let parsed = parseCommand(message.content);
     if (parsed == null) return;
-    console.log(Commands.dispatch);
-    let command = Commands.dispatch[parsed[0]];
+    let command = Commands.dispatch.get(parsed[0]);
     
     if (command != null) {
         command.run(message, parsed[1]);

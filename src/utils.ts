@@ -6,11 +6,13 @@ type Message = Discord.Message;
 class TextCommand {
     readonly name:string;
     readonly desc:string;
+    readonly complexDesc:string;
     readonly run: (message:Message, content:string) => void;
 
-    constructor(name:string, desc:string, run:(a:Message, b:string) => void) {
+    constructor(name:string, desc:string, complexDesc:string, run:(a:Message, b:string) => void) {
         this.name = name;
         this.desc = desc;
+        this.complexDesc = complexDesc;
         this.run = run;
     }
 }

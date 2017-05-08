@@ -6,7 +6,6 @@ function initCommands() {
     fs.readdir("./build/commands", (err, files) => {
         if (err) console.log(err);
         for (let file of files) {
-            console.log(file);
             if (!file.endsWith(".js")) continue;
             if (file.endsWith("index.js")) continue;
 
