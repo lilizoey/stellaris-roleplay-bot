@@ -1,7 +1,11 @@
 import { Message } from "discord.js";
 import { TextCommand } from "../utils";
 import { dispatch } from "./index";
-import { reduce } from "object.reduce";
+const reduce = require("object.reduce");
+
+function describeAll() {
+
+}
 
 export default new TextCommand(
     "help",
@@ -9,7 +13,7 @@ export default new TextCommand(
     (message: Message, content: string) => {
         message.channel.send(
             reduce(dispatch,
-            (acc, val, key, obj) => {
+            (acc:string, val:TextCommand, key:string, obj:{[key:string]:TextCommand}) => {
                 acc + val.name + " " + val.desc + "\n";
             })
         )

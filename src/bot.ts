@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
-import * as Utils from "./utils";
+import  { TextCommand, startsWith } from "./utils";
 import * as Commands from "./commands";
+import * as inits from "./init";
 
 const client = new Discord.Client();
 const token = process.env.DISCORD_TOKEN;
@@ -8,15 +9,16 @@ const token = process.env.DISCORD_TOKEN;
 let prefix = "!";
 
 client.login(token);
+inits.initCommands();
 
 function parseCommand(msg:string) {
-    if (msg.indexOf(prefix) === 0) {
+    if (msg.startsWith(prefix)) {
         let args = msg.split(/\s/);
         args[0] = args[0].substring(prefix.length);
         return (args);
     }
 
-    return "";
+    return null;
 }
 
 function dispatchText(message:Discord.Message) {
@@ -25,7 +27,7 @@ function dispatchText(message:Discord.Message) {
 
     let parsed = parseCommand(message.content);
     if (parsed == null) return;
-
+    console.log(Commands.dispatch);
     let command = Commands.dispatch[parsed[0]];
     
     if (command != null) {
@@ -36,7 +38,7 @@ function dispatchText(message:Discord.Message) {
 }
 
 function errorMessage(message:Discord.Message, attempt:string) {
-    message.channel.sendMessage(attempt + " isn't a recognized command!");
+    message.channel.send(attempt + " isn't a recognized command!");
 }
 
 client.on('ready', () => {

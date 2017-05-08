@@ -15,4 +15,8 @@ class TextCommand {
     }
 }
 
-export { TextCommand };
+function startsWith(haystack:string, needle:string) {
+    return haystack.indexOf(needle) === 0;
+}
+
+export { TextCommand, startsWith };
