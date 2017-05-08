@@ -6,7 +6,7 @@ type Message = Discord.Message;
 class TextCommand {
     readonly name:string;
     readonly desc:string;
-    readonly run: (a:Message, b:string) => void;
+    readonly run: (message:Message, content:string) => void;
 
     constructor(name:string, desc:string, run:(a:Message, b:string) => void) {
         this.name = name;

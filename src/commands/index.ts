@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import { TextCommand } from "../utils";
 
+let dispatch: { [key: string]: TextCommand } = {};
+
 fs.readdir(".", (err, files) => {
     if (err) console.log(err);
     for (let file of files) {
@@ -8,8 +10,11 @@ fs.readdir(".", (err, files) => {
         if (file.endsWith("index.ts")) continue;
 
         let imp = require(file).default;
-        if (typeof imp === )
+        if (imp instanceof TextCommand) {
+            let name = imp.name
+            dispatch.name = imp;
+        }
     }
 })
 
-let dispatch = 
+export { dispatch };

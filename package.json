@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "bot.js",
-  "dependencies": {},
+  "dependencies": {
+    "object.reduce": "^1.0.1"
+  },
   "devDependencies": {
     "@types/node": "^7.0.18",
     "typescript": "^2.3.2"

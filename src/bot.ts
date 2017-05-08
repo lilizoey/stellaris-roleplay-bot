@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import * as fs from "fs";
+import * as Utils from "./utils";
 import * as Commands from "./commands";
 
 const client = new Discord.Client();
@@ -10,7 +10,7 @@ let prefix = "!";
 client.login(token);
 
 function parseCommand(msg:string) {
-    if (msg.startsWith(prefix)) {
+    if (msg.indexOf(prefix) === 0) {
         let args = msg.split(/\s/);
         args[0] = args[0].substring(prefix.length);
         return (args);
@@ -20,16 +20,13 @@ function parseCommand(msg:string) {
 }
 
 function dispatchText(message:Discord.Message) {
-    console.log("1");
     if (message.author.bot) return;
-    console.log(message.type);    
     if (message.channel.type != "text") return;
-    console.log("3");
 
     let parsed = parseCommand(message.content);
-    if (!parsed) return;
+    if (parsed == null) return;
 
-    let command:Commands.textCommand = Commands.dispatch[parsed[0]];
+    let command = Commands.dispatch[parsed[0]];
     
     if (command != null) {
         command.run(message, parsed[1]);
