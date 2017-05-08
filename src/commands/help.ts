@@ -26,7 +26,7 @@ export default new TextCommand(
     "Provides a short description for each command, or indepth for any specific command.",
     "<insert better description here>",
     (message: Message, content: string) => {
-        if (content == null) {
+        if (content == "") {
             describeAll(message);
         } else {
             describe(message, content);

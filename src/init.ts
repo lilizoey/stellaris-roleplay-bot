@@ -1,21 +1,10 @@
-import * as fs from "fs";
-import { addCommand } from "./commands/";
-import { TextCommand } from "./utils";
+import { initCommands } from "./utils";
+import { addCommand as commAdd} from "./commands/";
+import { addCommand as fedAdd} from "./commands/federation/"
 
-function initCommands() {
-    fs.readdir("./build/commands", (err, files) => {
-        if (err) console.log(err);
-        for (let file of files) {
-            if (!file.endsWith(".js")) continue;
-            if (file.endsWith("index.js")) continue;
-
-            let imp = require("./commands/" + file).default;
-            if (imp instanceof TextCommand) {
-                let name = imp.name
-                addCommand(name, imp);
-            }
-        }
-    });
+function init() {
+    initCommands("./commands", commAdd);
+    initCommands("./commands/federation", fedAdd);
 }
 
-export { initCommands };
+export { init };

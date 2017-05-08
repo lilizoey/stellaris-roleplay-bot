@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import  { TextCommand, startsWith } from "./utils";
 import * as Commands from "./commands";
-import * as inits from "./init";
+import { init } from "./init";
 
 const client = new Discord.Client();
 const token = process.env.DISCORD_TOKEN;
@@ -9,13 +9,22 @@ const token = process.env.DISCORD_TOKEN;
 let prefix = "!";
 
 client.login(token);
-inits.initCommands();
+
+try {
+    process.chdir(__dirname);
+} catch (err) {
+    console.log(err);
+}
+
+init();
 
 function parseCommand(msg:string) {
     if (msg.startsWith(prefix)) {
         let args = msg.split(/\s/);
-        args[0] = args[0].substring(prefix.length);
-        return (args);
+        let arr: Array<string> = new Array(2);
+        arr[0] = args[0].substring(prefix.length);
+        arr[1] = args.slice(1).join(" ");
+        return arr;
     }
 
     return null;
