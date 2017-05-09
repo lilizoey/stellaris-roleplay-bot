@@ -21,9 +21,10 @@ function initFederationList() {
 function parseFederationJson(path:string) {
     let collection = new Collection<federationID, Federation>();
     let contents:string = fs.readFileSync(path,"UTF-8");
-    let fedJson: any = JSON.parse(contents);
 
     //// DANGERNOODLES LOSING TYPE SAFETY
+    let fedJson: any = JSON.parse(contents);
+    
     try {
         for (let val of fedJson) {
             let fed = new Federation(val.name, val.description, val.members);
