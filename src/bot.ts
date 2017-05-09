@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import  { TextCommand, startsWith } from "./utils";
+import  { TextCommand, startsWith, CommandContent } from "./utils";
 import * as Commands from "./commands";
 import { init } from "./init";
 
@@ -39,7 +39,7 @@ function dispatchText(message:Discord.Message) {
     let command = Commands.dispatch.get(parsed[0]);
     
     if (command != null) {
-        command.run(message, parsed[1]);
+        command.run(message, new CommandContent(parsed[1]));
     } else {
         errorMessage(message, parsed[0]);
     }
