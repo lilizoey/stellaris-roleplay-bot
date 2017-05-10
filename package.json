@@ -4,6 +4,7 @@
   "description": "",
   "main": "bot.js",
   "dependencies": {
+    "discord.js": "^11.1.0",
     "object.reduce": "^1.0.1"
   },
   "devDependencies": {
