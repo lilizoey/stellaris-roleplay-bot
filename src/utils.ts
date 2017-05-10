@@ -75,4 +75,20 @@ function makePath(dir:string, file:string) {
     return dir + sep + file;
 }
 
-export { TextCommand, startsWith, initCommands, CommandContent, makePath };
+function parseIntoCollection<K,V>(path:string, keygen:(key:string) => K, cons:(obj:any) => V | null) {
+    let collection = new Discord.Collection<K,V>();
+    let contents = fs.readFileSync(path, "UTF-8");
+
+    Object.entries(JSON.parse(contents)).forEach(
+        ([key, value]) => {
+            let consVal = cons(value);
+            if (consVal == null) return;
+
+            collection.set(keygen(key), consVal)
+        }
+    );
+
+    return collection;
+}
+
+export { TextCommand, startsWith, initCommands, CommandContent, makePath, parseIntoCollection };

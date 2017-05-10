@@ -1,2 +1,3 @@
-node src\bot.js
+tsc
+node build\bot.js
 PAUSE

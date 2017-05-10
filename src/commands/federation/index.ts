@@ -1,13 +1,14 @@
 import * as fs from "fs";
-import { TextCommand } from "../../utils";
+import { TextCommand, parseIntoCollection } from "../../utils";
 import { Collection, Snowflake } from "discord.js";
 import { Federation } from "./federationUtils";
+import { sep } from "path";
  
-type federationID = string;
+type FederationID = string;
 
 let dispatch = new Collection<string, TextCommand>();
 
-let federations = new Collection<federationID, Federation>(); 
+let federations = new Collection<FederationID, Federation>(); 
 
 function addCommand(name: string, command: TextCommand) {
     if (name == "federation") return;
@@ -15,27 +16,24 @@ function addCommand(name: string, command: TextCommand) {
 }
 
 function initFederationList() {
-    federations = parseFederationJson(`${__dirname}/federationList.json`);
+    federations = parseIntoCollection<FederationID, Federation>(
+        `${__dirname}${sep}federationList.json`,
+        (key) => key,
+        federationFromAny
+    )
 }
 
-function parseFederationJson(path:string) {
-    let collection = new Collection<federationID, Federation>();
-    let contents:string = fs.readFileSync(path,"UTF-8");
+function federationFromAny(val:any) {
+    if (!val.name || !val.leader || !val.description || !val.members) return null;
 
-    //// DANGERNOODLES LOSING TYPE SAFETY
-    let fedJson: any = JSON.parse(contents);
-    
+    let returnValue;
+
     try {
-        for (let val of fedJson) {
-            let fed = new Federation(val.name, val.description, val.members);
-            collection.set(val.name, fed);
-        }   
+        return new Federation(val.name, val.leader, val.description, val.members);
     } catch (err) {
-        console.log(`failed to read federationList:\n${fedJson}\nwith err:\n${err}`)
+        console.log(`Failed to parse ${val} as federation`)
+        return null;
     }
-    //// DANGERNOODLES OVER
-
-    return collection;
 }
 
 function init() {
